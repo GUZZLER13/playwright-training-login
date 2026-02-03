@@ -62,4 +62,4 @@ Objectif : couvrir les deux pages avec une suite Playwright exploitant leur con
 - Un mini retour d’expérience (≤1 page) décrivant :
   - l’usage de `waitForRequest` / `waitForResponse`,
   - la gestion des attentes liées à l’accessibilité (`aria-live`, `aria-invalid`, etc.),
-  - d’éventuelles améliorations si l’application évoluait.
+  - quels hooks Playwright il mettrait en place en premier et le bénéfice attendu pour la suite de tests.
