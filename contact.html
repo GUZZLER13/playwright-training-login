@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f5f5;
+      color: #1f1f1f;
+    }
+
+    main {
+      width: min(90vw, 560px);
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      padding: 32px;
+      display: grid;
+      gap: 24px;
+    }
+
+    h1 {
+      margin: 0;
+    }
+
+    form {
+      display: grid;
+      gap: 20px;
+    }
+
+    fieldset {
+      border: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 16px;
+    }
+
+    .form-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    label {
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #c5c5c5;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    input[aria-invalid="true"],
+    textarea[aria-invalid="true"] {
+      border-color: #b91c1c;
+    }
+
+    .inline-error {
+      font-size: 0.9rem;
+      color: #b91c1c;
+    }
+
+    .messages {
+      display: grid;
+      gap: 12px;
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+    }
+
+    .message-error {
+      background: #fee2e2;
+      border-color: #f87171;
+      color: #7f1d1d;
+    }
+
+    .message-success {
+      background: #dcfce7;
+      border-color: #86efac;
+      color: #065f46;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    button[type="submit"] {
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #2563eb;
+      color: #ffffff;
+      transition: background 0.2s ease;
+    }
+
+    button[type="submit"]:hover,
+    button[type="submit"]:focus-visible {
+      background: #1d4ed8;
+    }
+
+    .return-link {
+      text-align: center;
+      font-size: 0.95rem;
+    }
+
+    .return-link a {
+      color: #1f2937;
+      text-decoration: none;
+    }
+
+    .return-link a:hover,
+    .return-link a:focus-visible {
+      text-decoration: underline;
+    }
+
+    .honeypot {
+      position: absolute;
+      left: -10000px;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 520px) {
+      main {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Contact</h1>
+    <div class="messages" aria-live="off">
+      <!-- Zones d’état présentes dès le chargement -->
+      <p id="contact-error"
+         class="message message-error"
+         data-testid="contact-error"
+         role="alert"
+         aria-live="assertive"
+         hidden>
+        L’envoi du message a échoué. Merci de réessayer.
+      </p>
+      <p id="contact-success"
+         class="message message-success"
+         data-testid="contact-success"
+         role="status"
+         aria-live="polite"
+         hidden>
+        Message envoyé avec succès.
+      </p>
+    </div>
+    <!-- data-testid stables pour l’automatisation Playwright -->
+    <form id="contact-form"
+          data-testid="contact-form"
+          novalidate>
+      <fieldset>
+        <legend>Vos informations</legend>
+        <div class="form-group">
+          <label for="contact-name">Nom complet</label>
+          <input id="contact-name"
+                 name="contact-name"
+                 type="text"
+                 required
+                 aria-required="true"
+                 aria-invalid="false"
+                 aria-describedby="contact-name-error"
+                 data-testid="contact-name">
+          <p id="contact-name-error"
+             class="inline-error"
+             data-testid="contact-name-error"
+             role="alert"
+             hidden></p>
+        </div>
+        <div class="form-group">
+          <label for="contact-email">Email</label>
+          <input id="contact-email"
+                 name="contact-email"
+                 type="email"
+                 required
+                 aria-required="true"
+                 aria-invalid="false"
+                 aria-describedby="contact-email-error"
+                 data-testid="contact-email">
+          <p id="contact-email-error"
+             class="inline-error"
+             data-testid="contact-email-error"
+             role="alert"
+             hidden></p>
+        </div>
+        <div class="form-group">
+          <label for="contact-message">Message</label>
+          <textarea id="contact-message"
+                    name="contact-message"
+                    required
+                    aria-required="true"
+                    aria-invalid="false"
+                    aria-describedby="contact-message-error"
+                    data-testid="contact-message"></textarea>
+          <p id="contact-message-error"
+             class="inline-error"
+             data-testid="contact-message-error"
+             role="alert"
+             hidden></p>
+        </div>
+      </fieldset>
+      <!-- Champ anti-spam conservé vide côté utilisateurs légitimes -->
+      <div class="honeypot" aria-hidden="true">
+        <label for="contact-company">Laissez ce champ vide</label>
+        <input id="contact-company"
+               name="contact-company"
+               type="text"
+               tabindex="-1"
+               autocomplete="off"
+               data-testid="contact-honeypot">
+      </div>
+      <div class="actions">
+        <button type="submit" data-testid="contact-submit">Envoyer</button>
+      </div>
+    </form>
+    <p class="return-link">
+      <a href="index.html">Retour à la page de connexion</a>
+    </p>
+  </main>
+  <script>
+    const contactForm = document.querySelector('[data-testid="contact-form"]');
+    const contactNameInput = document.querySelector('[data-testid="contact-name"]');
+    const contactEmailInput = document.querySelector('[data-testid="contact-email"]');
+    const contactMessageInput = document.querySelector('[data-testid="contact-message"]');
+    const contactHoneypotInput = document.querySelector('[data-testid="contact-honeypot"]');
+    const contactSubmitButton = document.querySelector('[data-testid="contact-submit"]');
+    const contactGlobalError = document.querySelector('[data-testid="contact-error"]');
+    const contactGlobalSuccess = document.querySelector('[data-testid="contact-success"]');
+    const contactNameError = document.querySelector('[data-testid="contact-name-error"]');
+    const contactEmailError = document.querySelector('[data-testid="contact-email-error"]');
+    const contactMessageError = document.querySelector('[data-testid="contact-message-error"]');
+
+    const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function resetContactMessages() {
+      contactGlobalError.hidden = true;
+      contactGlobalSuccess.hidden = true;
+      contactNameError.hidden = true;
+      contactNameError.textContent = '';
+      contactEmailError.hidden = true;
+      contactEmailError.textContent = '';
+      contactMessageError.hidden = true;
+      contactMessageError.textContent = '';
+      contactNameInput.setAttribute('aria-invalid', 'false');
+      contactEmailInput.setAttribute('aria-invalid', 'false');
+      contactMessageInput.setAttribute('aria-invalid', 'false');
+    }
+
+    function setFieldError(field, errorElement, message) {
+      errorElement.textContent = message;
+      errorElement.hidden = false;
+      field.setAttribute('aria-invalid', 'true');
+    }
+
+    contactForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      resetContactMessages();
+
+      // Requête réseau explicite pour observation Playwright
+      fetch('https://example.com/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: contactNameInput.value,
+          email: contactEmailInput.value,
+          messageLength: contactMessageInput.value.length
+        }),
+        cache: 'no-store'
+      }).catch(() => {
+        // L’UI reste déterministe même si la requête échoue.
+      });
+
+      if (contactHoneypotInput.value.trim().length > 0) {
+        contactGlobalError.textContent = 'La soumission a été bloquée.';
+        contactGlobalError.hidden = false;
+        return;
+      }
+
+      const nameValue = contactNameInput.value.trim();
+      const emailValue = contactEmailInput.value.trim();
+      const messageValue = contactMessageInput.value.trim();
+      let hasError = false;
+
+      if (nameValue.length === 0) {
+        setFieldError(contactNameInput, contactNameError, 'Veuillez indiquer votre nom.');
+        hasError = true;
+      }
+
+      if (emailValue.length === 0) {
+        setFieldError(contactEmailInput, contactEmailError, 'Veuillez préciser votre email.');
+        hasError = true;
+      } else if (!EMAIL_PATTERN.test(emailValue)) {
+        setFieldError(contactEmailInput, contactEmailError, 'Le format de l’adresse email est invalide.');
+        hasError = true;
+      }
+
+      if (messageValue.length === 0) {
+        setFieldError(contactMessageInput, contactMessageError, 'Veuillez saisir votre message.');
+        hasError = true;
+      }
+
+      if (hasError) {
+        return;
+      }
+
+      contactGlobalSuccess.hidden = false;
+      contactForm.reset();
+      contactNameInput.setAttribute('aria-invalid', 'false');
+      contactEmailInput.setAttribute('aria-invalid', 'false');
+      contactMessageInput.setAttribute('aria-invalid', 'false');
+    });
+
+    contactSubmitButton.addEventListener('focus', () => {
+      // Stabilité DOM : aucun effet secondaire sur le focus.
+    });
+  </script>
+</body>
+</html>
