@@ -15,6 +15,14 @@ Ce projet propose deux pages statiques destinées aux ateliers Playwright :
   - Tous les champs sont obligatoires et un honeypot discret bloque les soumissions automatiques.  
   - Chaque envoi provoque un `fetch` `POST` vers `https://example.com/contact`, indépendamment de la réponse.
 
+## Le honeypot en pratique
+
+- **But** : champ invisible qui piège les robots remplissant tout automatiquement. Un humain ne le voit pas et le laisse vide, mais un bot naïf le remplit et l’envoi est bloqué.  
+- **Implémentation** : dans `contact.html`, le bloc `<div class="honeypot" aria-hidden="true">` contient l’input `data-testid="contact-honeypot"`. Le CSS le place hors écran (`left: -10000px`). Au submit, le script vérifie `contactHoneypotInput.value.trim()` ; si quelque chose est saisi, on affiche “La soumission a été bloquée.” et on arrête le traitement.  
+- **Test Playwright** :  
+  - Cas humain : remplir les champs visibles, laisser le honeypot vide → la requête `fetch` part et le succès apparaît.  
+  - Cas robot : `locator('[data-testid="contact-honeypot"]').fill('bot')` avant le submit → le message d’erreur global devient visible (`toBeVisible`) et aucun succès n’est signalé.
+
 ## Pourquoi c’est robuste pour Playwright
 
 - **DOM stable** : les messages d’état existent dès le chargement et sont simplement masqués/affichés.  
