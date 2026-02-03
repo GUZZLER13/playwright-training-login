@@ -301,14 +301,8 @@
       resetContactMessages();
 
       // Requête réseau explicite pour observation Playwright
-      fetch('https://example.com/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: contactNameInput.value,
-          email: contactEmailInput.value,
-          messageLength: contactMessageInput.value.length
-        }),
+      fetch(`https://example.com/?source=contact&length=${encodeURIComponent(contactMessageInput.value.length.toString())}`, {
+        method: 'GET',
         cache: 'no-store'
       }).catch(() => {
         // L’UI reste déterministe même si la requête échoue.
