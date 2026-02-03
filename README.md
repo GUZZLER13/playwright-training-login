@@ -33,3 +33,33 @@ Ce projet propose deux pages statiques destinées aux ateliers Playwright :
 - **Logique déterministe** : aucune temporisation ou condition aléatoire, les validations produisent toujours le même résultat.  
 - **Activité réseau contrôlée** : les requêtes `fetch` sont centralisées et triviales à intercepter avec `page.waitForRequest` ou `page.waitForResponse`.  
 - **Accessibilité soignée** : attributs ARIA (`aria-live`, `aria-invalid`, `role="alert"`) facilitent les assertions sur l’état de l’interface.
+
+## Exercice Playwright
+
+Objectif : couvrir les deux pages avec une suite Playwright exploitant leur conception “test-friendly”.
+
+### Structure des fichiers attendue
+1. `tests/utils/auth.ts` : helper `async function login(page)` qui renseigne les identifiants valides et soumet le formulaire.
+2. `tests/login.spec.ts` : scénarios propres à la page de connexion.
+3. `tests/contact.spec.ts` : scénarios propres au formulaire de contact.
+
+*Indice : centraliser la séquence de connexion dans `login(page)` évite de la dupliquer dans chaque spec.*
+
+### Scénarios à automatiser (6 au total)
+1. **Affichage initial – connexion** : vérifier structure, labels, messages globaux masqués, présence des `data-testid`.
+2. **Validations client – connexion** : email vide, email invalide, mot de passe vide (paramétrer ou décliner en sous-cas).
+3. **Échec de connexion** : identifiants incorrects → bannière “Identifiants invalides”, message mot de passe, requête `GET https://example.com/` observée.
+4. **Connexion réussie + redirection** : identifiants valides → bannière succès, requête `GET https://example.com/`, navigation vers `contact.html`.
+5. **Contact – parcours humain** : via `login(page)`, remplir tous les champs, laisser le honeypot vide, attendre `GET https://example.com/?source=contact…` (statut 200), vérifier message succès et reset.
+6. **Contact – parcours robot (honeypot)** : remplir `data-testid="contact-honeypot"` avant submit → message “La soumission a été bloquée.”, absence de succès.
+
+### Livrables attendus
+- Le code Playwright pour les 3 fichiers ci-dessus.
+- Une note succincte expliquant :
+  - pourquoi ces 6 scénarios couvrent les risques essentiels,
+  - en quoi les tests réalisés sont robustes,
+  - pourquoi le HTML fourni est adapté à cette automatisation.
+- Un mini retour d’expérience (≤1 page) décrivant :
+  - l’usage de `waitForRequest` / `waitForResponse`,
+  - la gestion des attentes liées à l’accessibilité (`aria-live`, `aria-invalid`, etc.),
+  - d’éventuelles améliorations si l’application évoluait.
