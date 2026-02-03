@@ -6,6 +6,11 @@ Ce projet propose deux pages statiques destinées aux ateliers Playwright :
   - Un `fetch` explicite est déclenché à chaque soumission pour observer l’activité réseau côté tests.  
   - Les éléments de formulaire disposent d’attributs `data-testid` stables et de messages d’erreur présents en permanence dans le DOM.
 
+**Identifiants de démonstration**
+
+- Email : `test@test.com`
+- Mot de passe : `test`
+
 - `contact.html` : formulaire de contact accessible après authentification réussie.  
   - Tous les champs sont obligatoires et un honeypot discret bloque les soumissions automatiques.  
   - Chaque envoi provoque un `fetch` `POST` vers `https://example.com/contact`, indépendamment de la réponse.
