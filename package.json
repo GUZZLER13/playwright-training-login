@@ -1,0 +1,17 @@
+{
+  "name": "playwright-training-login",
+  "version": "1.0.0",
+  "description": "Ce projet propose deux pages statiques destinées aux ateliers Playwright :",
+  "main": "index.js",
+  "scripts": {
+    "test:ui": "playwright test --ui"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.1",
+    "@types/node": "^25.2.0",
+    "http-server": "^14.1.1"
+  }
+}
