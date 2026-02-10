@@ -1,6 +1,11 @@
 
 # Playwright
 node_modules/
+
+# Tests locaux (ne pas pousser)
+tests-local/
+tests/*.local.spec.js
+tests/contact-race-fix.local.spec.js
 /test-results/
 /playwright-report/
 /blob-report/

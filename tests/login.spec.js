@@ -27,14 +27,13 @@ test.describe('Connexion', () => {
 
   test('3. Échec de connexion', async ({ page }) => {
     await page.context().clearCookies();
-    // On écoute la requête sortante vers httpbin
-    const requestPromise = page.waitForRequest(req => req.url().includes('httpbin.org'));
-    
     await page.getByTestId('email').fill('inconnu@test.com');
     await page.getByTestId('password').fill('mauvais');
-    await page.getByTestId('submit').click();
 
-    await requestPromise; // Vérifie que le fetch a bien été tenté
+    const [request] = await Promise.all([
+      page.waitForRequest(req => req.url().includes('api/login')),
+      page.getByTestId('submit').click(),
+    ]);
     await expect(page.getByTestId('global-error')).toBeVisible();
     await expect(page.getByTestId('password-error')).toContainText(/correspondent pas/);
   });
@@ -46,12 +45,12 @@ test.describe('Connexion', () => {
   await page.getByTestId('password').fill('test');
 
   const [request, response] = await Promise.all([
-    page.waitForRequest(req => req.url().includes('httpbin.org/get')),
+    page.waitForRequest(req => req.url().includes('api/login')),
     page.waitForResponse(res => res.url().includes('contact.html') && res.status() === 200),
     page.getByTestId('submit').click(),
   ]);
 
-  expect(request).toBeDefined(); 
+  expect(request.url()).toContain('api/login');
   expect(response.status()).toBe(200);
   await expect(page).toHaveURL(/contact\.html/);
 });

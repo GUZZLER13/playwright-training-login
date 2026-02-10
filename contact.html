@@ -300,12 +300,12 @@
       event.preventDefault();
       resetContactMessages();
 
-      // Requête réseau explicite pour observation Playwright
-      fetch(`https://httpbin.org/get?source=contact&length=${encodeURIComponent(contactMessageInput.value.length.toString())}`, {
+      // Requête réseau locale pour observation Playwright (pas de dépendance externe)
+      fetch(`/api/contact.json?source=contact&length=${encodeURIComponent(contactMessageInput.value.length.toString())}`, {
         method: 'GET',
         cache: 'no-store'
       }).catch(() => {
-        // L’UI reste déterministe même si la requête échoue.
+        // L'UI reste déterministe même si la requête échoue.
       });
 
       if (contactHoneypotInput.value.trim().length > 0) {

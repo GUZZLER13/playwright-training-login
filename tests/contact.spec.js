@@ -12,11 +12,11 @@ test.describe('Contact', () => {
   await page.getByTestId('contact-message').fill('Hello');
 
   const [request] = await Promise.all([
-    page.waitForRequest(req => req.url().includes('source=contact')),
+    page.waitForRequest(req => req.url().includes('api/contact')),
     page.getByTestId('contact-submit').click(),
   ]);
 
-  expect(request.url()).toContain('source=contact');
+  expect(request.url()).toContain('api/contact');
   
   await expect(page.getByTestId('contact-success')).toBeVisible();
   await expect(page.getByTestId('contact-name')).toHaveValue('');
