@@ -15,7 +15,7 @@ Ce projet propose deux pages statiques destinées aux ateliers Playwright :
 
 - `contact.html` : formulaire de contact accessible après authentification réussie.  
   - Tous les champs sont obligatoires et un honeypot discret bloque les soumissions automatiques.  
-  - Chaque envoi déclenche un `fetch` `GET` vers `https://example.com/?source=contact&length=<...>` qui répond en `200 OK`, idéal pour un `page.waitForResponse()` dans Playwright.
+  - Chaque envoi déclenche un `fetch` `GET` vers `https://httpbin.org/get?source=contact&length=<...>` qui répond en `200 OK`, idéal pour un `page.waitForResponse()` dans Playwright.
 
 ## Le honeypot en pratique
 
@@ -25,7 +25,7 @@ Ce projet propose deux pages statiques destinées aux ateliers Playwright :
   - L’attribut `aria-hidden="true"` signale aux technologies d’assistance de l’ignorer.  
   Lorsque l’on soumet le formulaire, le script vérifie `contactHoneypotInput.value.trim()` ; si quelque chose est saisi, on affiche “La soumission a été bloquée.” et on arrête le traitement.  
 - **Test Playwright** :  
-  - Cas humain : remplir les champs visibles, laisser le honeypot vide → la requête `fetch` part (réponse `200 OK` sur `example.com`) et le succès apparaît.  
+  - Cas humain : remplir les champs visibles, laisser le honeypot vide → la requête `fetch` part (réponse `200 OK` sur `httpbin.org`) et le succès apparaît.  
   - Cas robot : `locator('[data-testid="contact-honeypot"]').fill('bot')` avant le submit → le message d’erreur global devient visible (`toBeVisible`) et aucun succès n’est signalé.
 
 ## Pourquoi c’est robuste pour Playwright
@@ -53,9 +53,9 @@ Pour les requêtes réseau (scénarios 3, 4 et 5), utiliser `waitForRequest` ou 
 
 1. **Affichage initial – connexion** : vérifier structure, labels, messages globaux masqués, présence des `data-testid`.
 2. **Validations client – connexion** : email vide, email invalide, mot de passe vide (paramétrer ou décliner en sous-cas).
-3. **Échec de connexion** : identifiants incorrects → bannière “Identifiants invalides”, message mot de passe, requête `GET https://example.com/` observée.
-4. **Connexion réussie + redirection** : identifiants valides → bannière succès, requête `GET https://example.com/`, navigation vers `contact.html`.
-5. **Contact – parcours humain** : via `login(page)`, remplir tous les champs, laisser le honeypot vide, attendre `GET https://example.com/?source=contact…` (statut 200), vérifier message succès et reset.
+3. **Échec de connexion** : identifiants incorrects → bannière “Identifiants invalides”, message mot de passe, requête `GET https://httpbin.org/get` observée.
+4. **Connexion réussie + redirection** : identifiants valides → bannière succès, requête `GET https://httpbin.org/get`, navigation vers `contact.html`.
+5. **Contact – parcours humain** : via `login(page)`, remplir tous les champs, laisser le honeypot vide, attendre `GET https://httpbin.org/get?source=contact…` (statut 200), vérifier message succès et reset.
 6. **Contact – parcours robot (honeypot)** : remplir `data-testid="contact-honeypot"` avant submit → message “La soumission a été bloquée.”, absence de succès.
 
 ### Livrables attendus

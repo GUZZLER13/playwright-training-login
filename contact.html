@@ -301,7 +301,7 @@
       resetContactMessages();
 
       // Requête réseau explicite pour observation Playwright
-      fetch(`https://example.com/?source=contact&length=${encodeURIComponent(contactMessageInput.value.length.toString())}`, {
+      fetch(`https://httpbin.org/get?source=contact&length=${encodeURIComponent(contactMessageInput.value.length.toString())}`, {
         method: 'GET',
         cache: 'no-store'
       }).catch(() => {
