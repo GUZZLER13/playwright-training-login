@@ -300,7 +300,7 @@
       event.preventDefault();
       resetContactMessages();
 
-      // Requête réseau locale pour observation Playwright (pas de dépendance externe)
+      // Requête réseau pour observation Playwright
       fetch(`/api/contact.json?source=contact&length=${encodeURIComponent(contactMessageInput.value.length.toString())}`, {
         method: 'GET',
         cache: 'no-store'
