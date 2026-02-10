@@ -1,5 +1,7 @@
 # Page de connexion d’entraînement Playwright
 
+**Projet déployé sur :** [https://nimble-youtiao-9ed66b.netlify.app/](https://nimble-youtiao-9ed66b.netlify.app/)
+
 Ce projet propose deux pages statiques destinées aux ateliers Playwright :
 
 - `index.html` : page de connexion avec identifiants déterministes (`test@test.com` / `test`).  
