@@ -1,39 +1,48 @@
-import { test, expect } from '@playwright/test';
-import { login } from './utils/auth.js';
+const { test, expect } = require('@playwright/test');
+const { login } = require('./utils/auth');
 
-test.describe('Page de contact', () => {
+test.describe('Contact', () => {
   test.beforeEach(async ({ page }) => {
-    // Intercepter l'appel fetch vers example.com (utilisé par le formulaire de contact)
-    await page.route('https://example.com/**', route => route.fulfill({ status: 200 }));
-    // Utiliser le helper pour se connecter et arriver sur contact.html
     await login(page);
   });
 
-  test('5. Contact – parcours humain', async ({ page }) => {
-    await page.getByTestId('contact-name').fill('Jean Dupont');
-    await page.getByTestId('contact-email').fill('jean@test.com');
-    await page.getByTestId('contact-message').fill('Ceci est un message de test.');
+  test('5. Contact parcours humain', async ({ page }) => {
+  await page.getByTestId('contact-name').fill('Jean');
+  await page.getByTestId('contact-email').fill('jean@test.com');
+  await page.getByTestId('contact-message').fill('Hello');
 
-    await page.getByTestId('contact-submit').click();
+  const [request] = await Promise.all([
+    page.waitForRequest(req => req.url().includes('source=contact')),
+    page.getByTestId('contact-submit').click(),
+  ]);
 
-    // Vérifier que le message de succès apparaît et que le champ nom est vidé
-    await expect(page.getByTestId('contact-success')).toBeVisible();
-    await expect(page.getByTestId('contact-name')).toHaveValue('');
-  });
+  expect(request.url()).toContain('source=contact');
+  
+  await expect(page.getByTestId('contact-success')).toBeVisible();
+  await expect(page.getByTestId('contact-name')).toHaveValue('');
+});
 
-  test('6. Contact – parcours robot (honeypot)', async ({ page }) => {
+  test('6. Contact honeypot', async ({ page }) => {
     await page.getByTestId('contact-name').fill('Robot');
     await page.getByTestId('contact-email').fill('bot@test.com');
-    await page.getByTestId('contact-message').fill('Bip Boop');
-    
-    // Remplir le champ invisible (honeypot) pour simuler un robot
+    await page.getByTestId('contact-message').fill('Bip Boup');
     await page.getByTestId('contact-honeypot').fill('Je suis un bot');
 
     await page.getByTestId('contact-submit').click();
 
-    // Vérifier que l'erreur de blocage apparaît
     await expect(page.getByTestId('contact-error')).toBeVisible();
     await expect(page.getByTestId('contact-error')).toContainText('bloquée');
     await expect(page.getByTestId('contact-success')).toBeHidden();
+  });
+
+  test('Bonus – Validation formulaire contact', async ({ page }) => {
+    // On ne remplit pas le nom
+    await page.getByTestId('contact-email').fill('test@test.com');
+    await page.getByTestId('contact-message').fill('Hello');
+    
+    await page.getByTestId('contact-submit').click();
+    
+    await expect(page.getByTestId('contact-name-error')).toBeVisible();
+    await expect(page.getByTestId('contact-name-error')).toContainText(/indiquer votre nom/);
   });
 });
