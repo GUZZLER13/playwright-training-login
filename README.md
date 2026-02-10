@@ -48,6 +48,9 @@ Objectif : couvrir les deux pages avec une suite Playwright exploitant leur con
 *Indice : centraliser la séquence de connexion dans `login(page)` évite de la dupliquer dans chaque spec.*
 
 ### Scénarios à automatiser (6 au total)
+
+Pour les requêtes réseau (scénarios 3, 4 et 5), utiliser `waitForRequest` ou `waitForResponse` pour attendre et vérifier l’appel (URL, statut 200). Ne pas remplacer la requête par un mock (`page.route()`).
+
 1. **Affichage initial – connexion** : vérifier structure, labels, messages globaux masqués, présence des `data-testid`.
 2. **Validations client – connexion** : email vide, email invalide, mot de passe vide (paramétrer ou décliner en sous-cas).
 3. **Échec de connexion** : identifiants incorrects → bannière “Identifiants invalides”, message mot de passe, requête `GET https://example.com/` observée.
