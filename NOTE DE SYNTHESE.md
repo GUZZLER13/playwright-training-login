@@ -16,7 +16,7 @@ J'ai implémenté 6 scénarios qui couvrent les points critiques du tunnel utili
 La robustesse de ma suite de tests repose sur :
 
 -   **Sélecteurs stables :** Utilisation exclusive de `data-testid`, ce qui rend les tests insensibles aux changements de styles CSS ou de structure HTML profonde.
--   **Déterminisme réseau :** Interception des appels vers `https://example.com` via `page.route()`. Cela garantit un comportement constant indépendamment de la latence ou de la disponibilité du serveur distant.
+-   **Déterminisme réseau :** Les formulaires appellent des API locales (`/api/login.json`, `/api/contact.json`). Les tests s’appuient sur `waitForRequest` et `waitForResponse`, sans mock. Comportement constant, pas de dépendance à un serveur externe.
 -   **Isolation :** Chaque test est atomique. L'échec d'un scénario n'impacte pas l'exécution des suivants.
 
 ## Adaptabilité du HTML
@@ -31,7 +31,7 @@ Le HTML fourni facilite l'automatisation par :
 
 ## Usage de `waitForRequest` / `waitForResponse`
 
-Dans ce projet, j'ai privilégié `page.route()` plutôt que `waitForResponse`. L'utilisation de `waitForResponse` nécessite un backend fonctionnel et stable. En cas de latence ou d'indisponibilité, le test échoue sur un timeout. En utilisant `page.route()`, je simule une réponse immédiate. Cela me permet de tester la réaction de l'interface utilisateur de manière déconnectée et déterministe, sans dépendre d'une infrastructure externe.
+Dans ce projet, j’ai utilisé `waitForRequest` et `waitForResponse` pour attendre les requêtes et vérifier les réponses (URL, statut 200). Les promesses sont lancées avant l’action (ex. clic) dans un `Promise.all` pour ne pas rater l’événement réseau. Les API locales (`/api/login.json`, `/api/contact.json`) évitent toute dépendance à un serveur externe et garantissent des tests reproductibles.
 
 ## Gestion des attentes liées à l'accessibilité
 
@@ -44,12 +44,12 @@ J'ai intégré la validation des états d'accessibilité pour m'assurer que l'ap
 
 Les premiers hooks que j'ai mis en place sont `beforeEach` et `afterEach`.
 
--   `**beforeEach**` **:** Il me permet de factoriser la navigation initiale et la configuration du mocking réseau. Le bénéfice est une réduction de la duplication de code et l'assurance d'un contexte de navigation "propre" avant chaque test.
+-   `**beforeEach**` **:** Il permet de factoriser la navigation initiale (et, dans les specs contact, l’appel à `login(page)` pour arriver sur la page contact). Le bénéfice est une réduction de la duplication de code et un contexte de test propre avant chaque scénario.
 -   **Bénéfice global :** L'usage de ces hooks centralise la maintenance. Si l'URL de base ou une règle de redirection change, la modification se fait en un seul point, ce qui stabilise la suite de tests sur le long terme.
 
 ### Rappel des fichiers de code inclus :
 
-1.  `tests/login.spec.js` (4 scénarios d'authentification)
-2.  `tests/contact.spec.js` (2 scénarios de formulaire et sécurité)
-3.  `tests/scenarios.spec.js` (Scénario de tunnel complet bout-en-bout)
-4.  `playwright.config.js` (Configuration réseau, webServer et traces)
+1.  `tests/login.spec.js` (4 scénarios d’authentification)
+2.  `tests/contact.spec.js` (3 scénarios : parcours humain, honeypot, validation formulaire)
+3.  `tests/utils/auth.js` (helper `login(page)`)
+4.  `playwright.config.js` (configuration, baseURL, projets)
