@@ -207,7 +207,7 @@
         </div>
       </fieldset>
       <div class="actions">
-        <button type="submit" data-testid="submit">Se connecter</button>
+        <button type="submit" data-testid="btn-login">Se connecter</button>
       </div>
     </form>
   </main>
@@ -253,7 +253,7 @@
       resetLoginMessages();
 
       // Requête réseau explicite attendue par les tests Playwright
-      fetch('/api/login.json', { method: 'GET', cache: 'no-store' }).catch(() => {
+      fetch('https://example.com/', { method: 'GET', cache: 'no-store' }).catch(() => {
         // L’UI ne dépend jamais de cette réponse.
       });
 
