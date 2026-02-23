@@ -253,7 +253,7 @@
       resetLoginMessages();
 
       // Requête réseau explicite attendue par les tests Playwright
-      fetch('https://example.com/', { method: 'GET', cache: 'no-store' }).catch(() => {
+      fetch('/api/login.json', { method: 'GET', cache: 'no-store' }).catch(() => {
         // L’UI ne dépend jamais de cette réponse.
       });
 

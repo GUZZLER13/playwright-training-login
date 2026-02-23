@@ -27,7 +27,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: 'https://nimble-youtiao-9ed66b.netlify.app',
+    baseURL: 'https://idyllic-horse-525621.netlify.app/',
     testIdAttribute: 'data-testid',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
